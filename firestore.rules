@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isAuthenticated() && request.auth.token.email_verified == true;
+    }
+
+    // Must be an East West University CSE Student (@std.ewubd.edu with dept code 60)
+    function isEwuCseStudent() {
+      return isEmailVerified()
+        && request.auth.token.email.matches('.*@std\\.ewubd\\.edu$')
+        && request.auth.token.email.matches('.*-60-.*');
+    }
+
+    function isValidRating(val) {
+      return val is number && val >= 1.0 && val <= 5.0;
+    }
+
+    function isValidRatingsBreakdown(ratings) {
+      return ratings is map
+        && ratings.keys().hasAll(['teachingQuality', 'examFairness', 'gradingStrictness', 'examGuarding', 'behaviorWithStudents'])
+        && isValidRating(ratings.teachingQuality)
+        && isValidRating(ratings.examFairness)
+        && isValidRating(ratings.gradingStrictness)
+        && isValidRating(ratings.examGuarding)
+        && isValidRating(ratings.behaviorWithStudents);
+    }
+
+    function isValidReviewCreate(data) {
+      return data.keys().hasAll(['facultyId', 'ratings', 'overallRating', 'comment', 'createdAt'])
+        && data.facultyId is string
+        && data.facultyId.size() > 0
+        && data.facultyId.size() <= 80
+        && isValidRating(data.overallRating)
+        && isValidRatingsBreakdown(data.ratings)
+        && data.comment is string
+        && data.comment.size() >= 10
+        && data.comment.size() <= 2500
+        && data.createdAt is string
+        && (
+          (data.userId == request.auth.uid) ||
+          (data.userEmail == request.auth.token.email)
+        );
+    }
+
+    function isReviewOwner(resData) {
+      return isAuthenticated() && (
+        ('userId' in resData && resData.userId == request.auth.uid) ||
+        ('userEmail' in resData && resData.userEmail == request.auth.token.email)
+      );
+    }
+
+    // Reviews collection rules
+    match /reviews/{reviewId} {
+      // 1. PUBLIC READ: All students and guests can read faculty ratings
+      allow read: if true;
+
+      // 2. CREATE: Authenticated, verified EWU CSE students only
+      allow create: if isEwuCseStudent()
+                    && isValidReviewCreate(request.resource.data);
+
+      // 3. UPDATE: Only the author can update their review; cannot alter facultyId or ownership
+      allow update: if isReviewOwner(resource.data)
+                    && isValidRating(request.resource.data.overallRating)
+                    && isValidRatingsBreakdown(request.resource.data.ratings)
+                    && request.resource.data.comment is string
+                    && request.resource.data.comment.size() >= 10
+                    && request.resource.data.comment.size() <= 2500
+                    && request.resource.data.facultyId == resource.data.facultyId
+                    && (
+                      !('userId' in resource.data) || request.resource.data.userId == resource.data.userId
+                    );
+
+      // 4. DELETE: Only the author can delete their own review
+      allow delete: if isReviewOwner(resource.data);
+    }
+
+    // Deny all other collections and documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

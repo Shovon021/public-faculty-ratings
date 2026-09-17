@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --base-white: #F7F8FA;
+  --card-white: #FFFFFF;
+  --deep-navy: #0D1B2A;
+  --panel-navy: #1B2E44;
+  --border-navy: #2D4564;
+  --warm-cream: #EDE6DA;
+  --burgundy: #8B2635;
+  --burgundy-hover: #731E2B;
+  --text-body: #26334D;
+  --text-muted: #58667E;
+  --navy-hairline: rgba(13, 27, 42, 0.10);
+  --navy-hairline-strong: rgba(13, 27, 42, 0.18);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-serif);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--base-white);
+  color: var(--text-body);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-editorial {
+  font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", Times, serif;
+  letter-spacing: -0.015em;
+}
+
+/* Restrained, deliberate scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ECEEF2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4C9D4;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9AA3B5;
+}
+
+/* Subtle hairline borders */
+.border-navy-hairline {
+  border-color: var(--navy-hairline);
+}
+
+/* Live Faculty Flow Animation */
+@keyframes facultyStreamUp {
+  0% {
+    transform: translateY(520px) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+    opacity: 0;
+  }
+  10% {
+    opacity: var(--max-opacity, 0.85);
+  }
+  85% {
+    opacity: var(--max-opacity, 0.85);
+  }
+  100% {
+    transform: translateY(-180px) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+    opacity: 0;
+  }
+}
+
+.animate-faculty-stream {
+  animation: facultyStreamUp var(--stream-duration, 20s) linear infinite;
+  animation-delay: var(--stream-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-faculty-stream {
+    animation: none !important;
+    transform: none !important;
+    opacity: var(--max-opacity, 0.85) !important;
+  }
+  .animate-ticker {
+    animation: none !important;
+  }
+}
+
+/* Right-to-Left Scrolling Ticker */
+@keyframes tickerScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-ticker {
+  animation: tickerScroll 15s linear infinite;
+  will-change: transform;
 }
