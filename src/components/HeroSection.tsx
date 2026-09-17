@@ -184,31 +184,31 @@ export function HeroSection({
     const layerStyles = isForeground
       ? {
           zIndex: 3,
-          maxOpacity: isMobileBackground ? "0.26" : "0.98",
-          scale: isMobileBackground ? "0.78" : "1.04",
-          border: isMobileBackground ? "border-[#2D4564]/40" : "border-[#2D4564]",
-          bg: isMobileBackground ? "bg-[#1B2E44]/70" : "bg-[#1B2E44]",
-          width: isMobileBackground ? "w-[205px]" : "w-[260px] sm:w-[280px]",
-          imgSize: isMobileBackground ? "h-11 w-9" : "h-14 w-12 sm:h-16 sm:w-14",
+          maxOpacity: isMobileBackground ? "0.55" : "0.98",
+          scale: isMobileBackground ? "0.95" : "1.04",
+          border: isMobileBackground ? "border-[#2D4564]/80" : "border-[#2D4564]",
+          bg: isMobileBackground ? "bg-[#1B2E44]/90" : "bg-[#1B2E44]",
+          width: isMobileBackground ? "w-[245px]" : "w-[260px] sm:w-[280px]",
+          imgSize: isMobileBackground ? "h-14 w-12" : "h-14 w-12 sm:h-16 sm:w-14",
         }
       : isMid
       ? {
           zIndex: 2,
-          maxOpacity: isMobileBackground ? "0.18" : "0.75",
-          scale: isMobileBackground ? "0.70" : "0.94",
-          border: isMobileBackground ? "border-[#2D4564]/30" : "border-[#2D4564]/80",
-          bg: isMobileBackground ? "bg-[#1B2E44]/50" : "bg-[#1B2E44]/90",
-          width: isMobileBackground ? "w-[180px]" : "w-[230px] sm:w-[250px]",
-          imgSize: isMobileBackground ? "h-10 w-8" : "h-12 w-10 sm:h-14 sm:w-12",
+          maxOpacity: isMobileBackground ? "0.42" : "0.75",
+          scale: isMobileBackground ? "0.88" : "0.94",
+          border: isMobileBackground ? "border-[#2D4564]/60" : "border-[#2D4564]/80",
+          bg: isMobileBackground ? "bg-[#1B2E44]/80" : "bg-[#1B2E44]/90",
+          width: isMobileBackground ? "w-[225px]" : "w-[230px] sm:w-[250px]",
+          imgSize: isMobileBackground ? "h-12 w-10" : "h-12 w-10 sm:h-14 sm:w-12",
         }
       : {
           zIndex: 1,
-          maxOpacity: isMobileBackground ? "0.12" : "0.45",
-          scale: isMobileBackground ? "0.62" : "0.82",
-          border: isMobileBackground ? "border-[#2D4564]/20" : "border-[#2D4564]/50",
-          bg: isMobileBackground ? "bg-[#1B2E44]/30" : "bg-[#1B2E44]/70",
-          width: isMobileBackground ? "w-[160px]" : "w-[200px] sm:w-[220px]",
-          imgSize: isMobileBackground ? "h-9 w-7" : "h-10 w-9 sm:h-12 sm:w-10",
+          maxOpacity: isMobileBackground ? "0.32" : "0.45",
+          scale: isMobileBackground ? "0.80" : "0.82",
+          border: isMobileBackground ? "border-[#2D4564]/40" : "border-[#2D4564]/50",
+          bg: isMobileBackground ? "bg-[#1B2E44]/65" : "bg-[#1B2E44]/70",
+          width: isMobileBackground ? "w-[205px]" : "w-[200px] sm:w-[220px]",
+          imgSize: isMobileBackground ? "h-11 w-9" : "h-10 w-9 sm:h-12 sm:w-10",
         };
 
     // Organic distribution across mobile screen width
@@ -302,11 +302,11 @@ export function HeroSection({
         className="lg:hidden absolute inset-0 z-0 pointer-events-none overflow-hidden select-none"
         aria-hidden="true"
       >
-        {/* Top and bottom subtle fade masks */}
-        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0D1B2A] via-[#0D1B2A]/90 to-transparent z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0D1B2A] via-[#0D1B2A]/90 to-transparent z-10" />
-        {/* Dark vignette to preserve 100% text contrast & search usability */}
-        <div className="absolute inset-0 bg-[#0D1B2A]/65 z-10" />
+        {/* Soft edge fade masks */}
+        <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-[#0D1B2A] to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#0D1B2A] to-transparent z-10" />
+        {/* Transparent backdrop tint to keep cards lively and clearly visible */}
+        <div className="absolute inset-0 bg-[#0D1B2A]/25 z-10" />
 
         {/* Floating cards flowing in mobile background */}
         <div className="relative h-full w-full">
@@ -319,13 +319,13 @@ export function HeroSection({
           {/* Left Column: Solid Cream Headline + Single Burgundy Accent Word + Warm Cream Search */}
           <div className="lg:col-span-6 z-20">
             {/* Headline: Pure white (#FFFFFF) with burgundy accent word (#8B2635) */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight leading-[1.15]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold tracking-tight leading-[1.15] drop-shadow-[0_2px_12px_rgba(13,27,42,0.95)]">
               <span className="text-white">Find &amp; Evaluate Faculty</span>{" "}
               <span className="text-[#8B2635] italic font-medium">Anonymously</span>
             </h1>
 
             {/* Main Objective of the Website */}
-            <p className="mt-4 text-sm sm:text-base text-[#EDE6DA]/80 leading-relaxed max-w-lg font-sans">
+            <p className="mt-4 text-sm sm:text-base text-[#EDE6DA] leading-relaxed max-w-lg font-sans drop-shadow-[0_1px_6px_rgba(13,27,42,0.9)]">
               An independent, student-driven platform providing 100% anonymous faculty evaluations
               to help EWU students make informed section choices with confidence during advising.
             </p>
