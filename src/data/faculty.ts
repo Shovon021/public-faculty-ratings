@@ -2308,7 +2308,7 @@ export const EWU_CSE_FACULTY: FacultyMember[] = [
       "examGuarding": 0,
       "behaviorWithStudents": 0
     },
-    "avatarUrl": "https://fse.ewubd.edu/storage/app/uploads/public/674/d6a/6ba/674d6a6ba4a09386417440.png"
+    "avatarUrl": "https://fse.ewubd.edu/storage/app/uploads/public/6a5/f6f/2d6/6a5f6f2d6f770130468540.png"
   }
 ];
 
