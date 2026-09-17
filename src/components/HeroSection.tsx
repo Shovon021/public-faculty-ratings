@@ -181,44 +181,50 @@ export function HeroSection({
     const isForeground = card.layer === "fg";
     const isMid = card.layer === "mid";
 
-    // Non-AI Aesthetic: Crisp 1px border in a lighter navy (#2D4564), clean solid panel (#1B2E44), NO glow/blur shadows
     const layerStyles = isForeground
       ? {
-          zIndex: 25,
-          maxOpacity: isMobileBackground ? "0.35" : "0.98",
-          scale: isMobileBackground ? "0.85" : "1.04",
-          border: "border-[#2D4564]",
-          bg: "bg-[#1B2E44]",
-          width: isMobileBackground ? "w-[220px]" : "w-[260px] sm:w-[280px]",
-          imgSize: "h-14 w-12 sm:h-16 sm:w-14",
+          zIndex: 3,
+          maxOpacity: isMobileBackground ? "0.26" : "0.98",
+          scale: isMobileBackground ? "0.78" : "1.04",
+          border: isMobileBackground ? "border-[#2D4564]/40" : "border-[#2D4564]",
+          bg: isMobileBackground ? "bg-[#1B2E44]/70" : "bg-[#1B2E44]",
+          width: isMobileBackground ? "w-[205px]" : "w-[260px] sm:w-[280px]",
+          imgSize: isMobileBackground ? "h-11 w-9" : "h-14 w-12 sm:h-16 sm:w-14",
         }
       : isMid
       ? {
-          zIndex: 15,
-          maxOpacity: isMobileBackground ? "0.25" : "0.75",
-          scale: isMobileBackground ? "0.75" : "0.94",
-          border: "border-[#2D4564]/80",
-          bg: "bg-[#1B2E44]/90",
-          width: isMobileBackground ? "w-[190px]" : "w-[230px] sm:w-[250px]",
-          imgSize: "h-12 w-10 sm:h-14 sm:w-12",
+          zIndex: 2,
+          maxOpacity: isMobileBackground ? "0.18" : "0.75",
+          scale: isMobileBackground ? "0.70" : "0.94",
+          border: isMobileBackground ? "border-[#2D4564]/30" : "border-[#2D4564]/80",
+          bg: isMobileBackground ? "bg-[#1B2E44]/50" : "bg-[#1B2E44]/90",
+          width: isMobileBackground ? "w-[180px]" : "w-[230px] sm:w-[250px]",
+          imgSize: isMobileBackground ? "h-10 w-8" : "h-12 w-10 sm:h-14 sm:w-12",
         }
       : {
-          zIndex: 5,
-          maxOpacity: isMobileBackground ? "0.15" : "0.45",
-          scale: isMobileBackground ? "0.65" : "0.82",
-          border: "border-[#2D4564]/50",
-          bg: "bg-[#1B2E44]/70",
-          width: isMobileBackground ? "w-[170px]" : "w-[200px] sm:w-[220px]",
-          imgSize: "h-10 w-9 sm:h-12 sm:w-10",
+          zIndex: 1,
+          maxOpacity: isMobileBackground ? "0.12" : "0.45",
+          scale: isMobileBackground ? "0.62" : "0.82",
+          border: isMobileBackground ? "border-[#2D4564]/20" : "border-[#2D4564]/50",
+          bg: isMobileBackground ? "bg-[#1B2E44]/30" : "bg-[#1B2E44]/70",
+          width: isMobileBackground ? "w-[160px]" : "w-[200px] sm:w-[220px]",
+          imgSize: isMobileBackground ? "h-9 w-7" : "h-10 w-9 sm:h-12 sm:w-10",
         };
+
+    // Organic distribution across mobile screen width
+    const mobileLeftPositions = [6, 48, 14, 52, 2, 42, 20, 58, 10, 36];
+    const cardIndex = streamCards.findIndex((c) => c.id === card.id);
+    const resolvedLeft = isMobileBackground
+      ? `${mobileLeftPositions[cardIndex >= 0 ? cardIndex % mobileLeftPositions.length : 0]}%`
+      : `${card.leftPercent}%`;
 
     return (
       <div
-        key={card.id}
+        key={isMobileBackground ? `mobile-${card.id}` : card.id}
         style={
           {
             position: "absolute",
-            left: `${card.leftPercent}%`,
+            left: resolvedLeft,
             top: "0px",
             "--stream-duration": `${card.durationSec}s`,
             "--stream-delay": `${card.delaySec}s`,
@@ -228,9 +234,9 @@ export function HeroSection({
             zIndex: layerStyles.zIndex,
           } as React.CSSProperties
         }
-        className={`animate-faculty-stream ${isMobileBackground ? "" : "cursor-pointer group"}`}
+        className={`animate-faculty-stream ${isMobileBackground ? "pointer-events-none select-none" : "cursor-pointer group"}`}
         onClick={() => !isMobileBackground && faculty && onViewFaculty(faculty)}
-        title={faculty ? `View ${faculty.name}` : undefined}
+        title={!isMobileBackground && faculty ? `View ${faculty.name}` : undefined}
       >
         <div
           className={`flex items-center gap-3 rounded-xl border p-2.5 sm:p-3.5 transition-transform duration-200 ${
@@ -291,6 +297,23 @@ export function HeroSection({
 
   return (
     <section className="relative bg-[#0D1B2A] text-[#EDE6DA] pt-6 pb-6 sm:py-12 lg:py-16 border-b border-[#EDE6DA]/12 overflow-hidden">
+      {/* Mobile Ambient Background Live Stream: subtle, elegant upward flow */}
+      <div
+        className="lg:hidden absolute inset-0 z-0 pointer-events-none overflow-hidden select-none"
+        aria-hidden="true"
+      >
+        {/* Top and bottom subtle fade masks */}
+        <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0D1B2A] via-[#0D1B2A]/90 to-transparent z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0D1B2A] via-[#0D1B2A]/90 to-transparent z-10" />
+        {/* Dark vignette to preserve 100% text contrast & search usability */}
+        <div className="absolute inset-0 bg-[#0D1B2A]/65 z-10" />
+
+        {/* Floating cards flowing in mobile background */}
+        <div className="relative h-full w-full">
+          {streamCards.map((card) => renderFloatingCard(card, true))}
+        </div>
+      </div>
+
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="lg:grid lg:grid-cols-12 lg:gap-10 lg:items-center min-h-0 lg:min-h-[440px]">
           {/* Left Column: Solid Cream Headline + Single Burgundy Accent Word + Warm Cream Search */}
